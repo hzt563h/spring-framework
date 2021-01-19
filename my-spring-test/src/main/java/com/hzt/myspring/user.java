@@ -9,6 +9,10 @@ public class user {
 	public user(){
 		System.out.println("初始化");
 	}
-	@Autowired
 	private UserService userService;
+	@Autowired
+	public void setUserService(UserService userService) {
+		System.out.println("1");
+		this.userService = userService;
+	}
 }

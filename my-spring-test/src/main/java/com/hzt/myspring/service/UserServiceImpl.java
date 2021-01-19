@@ -1,5 +1,7 @@
 package com.hzt.myspring.service;
 
+import com.hzt.myspring.user;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -11,6 +13,8 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class UserServiceImpl implements UserService {
+	@Autowired
+	private com.hzt.myspring.user user;
 	public UserServiceImpl(){
 		System.out.println("UserServiceImpl");
 	}

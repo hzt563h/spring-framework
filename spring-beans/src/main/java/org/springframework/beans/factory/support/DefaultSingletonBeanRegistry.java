@@ -136,9 +136,13 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 	 */
 	protected void addSingleton(String beanName, Object singletonObject) {
 		synchronized (this.singletonObjects) {
+			//将bean存入一级缓存
 			this.singletonObjects.put(beanName, singletonObject);
+			//删除三级缓存数据
 			this.singletonFactories.remove(beanName);
+			//删除二级缓存数据
 			this.earlySingletonObjects.remove(beanName);
+			//将beanName放入单例集
 			this.registeredSingletons.add(beanName);
 		}
 	}
@@ -182,15 +186,22 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 	 */
 	@Nullable
 	protected Object getSingleton(String beanName, boolean allowEarlyReference) {
+		//先去一级缓存中获取
 		Object singletonObject = this.singletonObjects.get(beanName);
+		//singletonObject 是否为null && 返回指定的单例bean当前是否正在创建中
 		if (singletonObject == null && isSingletonCurrentlyInCreation(beanName)) {
 			synchronized (this.singletonObjects) {
+				//去二级缓存中获取
 				singletonObject = this.earlySingletonObjects.get(beanName);
+				//allowEarlyReference调用的时候传的默认值true
 				if (singletonObject == null && allowEarlyReference) {
+					//去三级缓存中获取
 					ObjectFactory<?> singletonFactory = this.singletonFactories.get(beanName);
 					if (singletonFactory != null) {
 						singletonObject = singletonFactory.getObject();
+						//从三级缓存中获取到后放入二级缓存
 						this.earlySingletonObjects.put(beanName, singletonObject);
+						//删除三级缓存中的数据
 						this.singletonFactories.remove(beanName);
 					}
 				}
@@ -253,6 +264,7 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 					afterSingletonCreation(beanName);
 				}
 				if (newSingleton) {
+					//将创建成功并注入属性的bean放入一级缓存
 					addSingleton(beanName, singletonObject);
 				}
 			}
@@ -328,7 +340,7 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 	}
 
 	/**
-	 * Return whether the specified singleton bean is currently in creation
+	 * 返回指定的单例bean当前是否正在创建中
 	 * (within the entire factory).
 	 * @param beanName the name of the bean
 	 */

@@ -300,6 +300,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 	}
 
 	/**
+	 * 返回此BeanFactory的自动装配候选解析器
 	 * Return the autowire candidate resolver for this BeanFactory (never {@code null}).
 	 */
 	public AutowireCandidateResolver getAutowireCandidateResolver() {
@@ -1118,9 +1119,9 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 						return descriptor.resolveNotUnique(type, matchingBeans);
 					}
 					else {
-						// In case of an optional Collection/Map, silently ignore a non-unique case:
-						// possibly it was meant to be an empty collection of multiple regular beans
-						// (before 4.3 in particular when we didn't even look for collection beans).
+						// 如果是可选的Collection / Map，则静默忽略一个非唯一的情况：
+						// 可能是多个常规Bean的空集合
+						// （尤其是在4.3之前，甚至我们根本没有寻找bean的时候）。
 						return null;
 					}
 				}
@@ -1294,7 +1295,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 			}
 		}
 		if (result.isEmpty() && !indicatesMultipleBeans(requiredType)) {
-			// Consider fallback matches if the first pass failed to find anything...
+			//如果第一遍未找到任何内容，请考虑进行备用匹配...
 			DependencyDescriptor fallbackDescriptor = descriptor.forFallbackMatch();
 			for (String candidate : candidateNames) {
 				if (!isSelfReference(beanName, candidate) && isAutowireCandidate(candidate, fallbackDescriptor)) {

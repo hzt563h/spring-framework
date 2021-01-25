@@ -463,13 +463,14 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		// 确保此时确实解决了bean类，并且
 		// 在动态解析的类的情况下克隆bean定义
 		// 不能存储在共享的合并bean定义中。
+		//确保 BeanDefinition 中的 Class 被加载
 		Class<?> resolvedClass = resolveBeanClass(mbd, beanName);
 		if (resolvedClass != null && !mbd.hasBeanClass() && mbd.getBeanClassName() != null) {
 			mbdToUse = new RootBeanDefinition(mbd);
 			mbdToUse.setBeanClass(resolvedClass);
 		}
 
-		// 准备方法替代。
+		// // 准备方法覆写，如果bean中定义了 <lookup-method /> 和 <replaced-method />
 		try {
 			mbdToUse.prepareMethodOverrides();
 		}
@@ -480,6 +481,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 
 		try {
 			// 给BeanPostProcessors一个返回代理而不是目标bean实例的机会。
+			//有代理返回代理??
 			Object bean = resolveBeforeInstantiation(beanName, mbdToUse);
 			if (bean != null) {
 				return bean;
@@ -491,6 +493,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		}
 
 		try {
+			// 创建 bean
 			Object beanInstance = doCreateBean(beanName, mbdToUse, args);
 			if (logger.isDebugEnabled()) {
 				logger.debug("Finished creating instance of bean '" + beanName + "'");

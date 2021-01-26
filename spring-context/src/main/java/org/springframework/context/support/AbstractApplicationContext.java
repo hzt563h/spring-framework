@@ -580,6 +580,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 			finally {
 				// 重置Spring核心中的常见自省缓存，因为我们
 				// 可能不再需要单例bean的元数据...
+				// 清除缓存
 				resetCommonCaches();
 			}
 		}
@@ -917,18 +918,23 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	 * {@link org.springframework.context.event.ContextRefreshedEvent}.
 	 */
 	protected void finishRefresh() {
+		//清理刚才一系列操作使用到的资源缓存
 		// Clear context-level resource caches (such as ASM metadata from scanning).
 		clearResourceCaches();
 
+		// 初始化LifecycleProcessor
 		// Initialize lifecycle processor for this context.
 		initLifecycleProcessor();
 
+		// 这个方法的内部实现是启动所有实现了Lifecycle接口的bean
 		// Propagate refresh to lifecycle processor first.
 		getLifecycleProcessor().onRefresh();
 
+		//发布ContextRefreshedEvent事件
 		// Publish the final event.
 		publishEvent(new ContextRefreshedEvent(this));
 
+		// 检查spring.liveBeansView.mbeanDomain是否存在，有就会创建一个MBeanServer
 		// Participate in LiveBeansView MBean, if active.
 		LiveBeansView.registerApplicationContext(this);
 	}

@@ -224,6 +224,7 @@ public class AnnotatedBeanDefinitionReader {
 		//获取beanName
 		String beanName = (name != null ? name : this.beanNameGenerator.generateBeanName(abd, this.registry));
 
+		//做了一些属性的赋值，比如是不是懒加载
 		AnnotationConfigUtils.processCommonDefinitionAnnotations(abd);
 		if (qualifiers != null) {
 			for (Class<? extends Annotation> qualifier : qualifiers) {

@@ -42,7 +42,7 @@ public class StandardAnnotationMetadata extends StandardClassMetadata implements
 
 	private final Annotation[] annotations;
 
-	private final boolean nestedAnnotationsAsMap;
+	private final boolean nestedAnnotationsAsMap;//默认传了true
 
 
 	/**
@@ -67,6 +67,7 @@ public class StandardAnnotationMetadata extends StandardClassMetadata implements
 	 */
 	public StandardAnnotationMetadata(Class<?> introspectedClass, boolean nestedAnnotationsAsMap) {
 		super(introspectedClass);
+		//获取配置类上的注解信息
 		this.annotations = introspectedClass.getAnnotations();
 		this.nestedAnnotationsAsMap = nestedAnnotationsAsMap;
 	}

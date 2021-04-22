@@ -519,10 +519,10 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 			// 初始化上下文，就是做一些准备工作
 			prepareRefresh();
 
-			// 告诉子类刷新内部bean工厂。
+			//通知子类刷新内部bean工厂，初始化BeanFactory并进行XML文件的解析、读取
 			ConfigurableListableBeanFactory beanFactory = obtainFreshBeanFactory();
 
-			// 准备在这种情况下使用的bean工厂。
+			//准备bean工厂在此上下文中使用，并对BeanFactory进行各种功能填充。
 			prepareBeanFactory(beanFactory);
 
 			try {

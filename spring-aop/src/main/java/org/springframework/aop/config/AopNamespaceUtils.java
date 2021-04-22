@@ -55,12 +55,15 @@ public abstract class AopNamespaceUtils {
 
 	public static void registerAutoProxyCreatorIfNecessary(
 			ParserContext parserContext, Element sourceElement) {
-
+		//把应用了@Aspect注解修饰的bean注册成BeanDefinition
 		BeanDefinition beanDefinition = AopConfigUtils.registerAutoProxyCreatorIfNecessary(
 				parserContext.getRegistry(), parserContext.extractSource(sourceElement));
+		//处理proxy-target-class和expose-proxy属性
 		useClassProxyingIfNecessary(parserContext.getRegistry(), sourceElement);
+		//注册组件并通知解析器
 		registerComponentIfNecessary(beanDefinition, parserContext);
 	}
+
 
 	public static void registerAspectJAutoProxyCreatorIfNecessary(
 			ParserContext parserContext, Element sourceElement) {
@@ -80,6 +83,9 @@ public abstract class AopNamespaceUtils {
 		registerComponentIfNecessary(beanDefinition, parserContext);
 	}
 
+	/**
+	 * useClassProxyingIfNecessary实现了proxy-target-class和expose-proxy属性的处理逻辑。
+	 */
 	private static void useClassProxyingIfNecessary(BeanDefinitionRegistry registry, @Nullable Element sourceElement) {
 		if (sourceElement != null) {
 			boolean proxyTargetClass = Boolean.parseBoolean(sourceElement.getAttribute(PROXY_TARGET_CLASS_ATTRIBUTE));
